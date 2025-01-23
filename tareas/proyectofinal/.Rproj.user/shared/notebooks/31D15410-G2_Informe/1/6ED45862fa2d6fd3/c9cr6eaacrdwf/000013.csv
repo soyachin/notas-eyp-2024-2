@@ -1,0 +1,27 @@
+"0",""
+"0","# Ajustar varias distribuciones"
+"0","fit_norm <- fitdist(DF$Gasto_semanal_cafe, ""norm"")"
+"0","fit_exp <- fitdist(DF$Gasto_semanal_cafe, ""exp"")"
+"0","fit_gamma <- fitdist(DF$Gasto_semanal_cafe, ""gamma"")"
+"1","<"
+"1",""
+"1","simpleError"
+"1",""
+"1"," in "
+"1",""
+"1","optim(par = vstart, fn = fnobj, fix.arg = fix.arg, obs = data, "
+"1",""
+"1","    gr = gradient, ddistnam = ddistname, hessian = TRUE, method = meth, "
+"1",""
+"1","    lower = lower, upper = upper, ...)"
+"1",""
+"1",": "
+"1",""
+"1","function cannot be evaluated at initial parameters"
+"1",""
+"1",">
+"
+"2","Error in fitdist(DF$Gasto_semanal_cafe, ""gamma"") : 
+  the function mle failed to estimate the parameters, 
+                with the error code 100
+"

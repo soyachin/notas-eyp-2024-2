@@ -1,0 +1,1 @@
+"0","boxplot(DF_completo$Promedio ~ DF_completo$Tiempo_estudio_extra_cafe, data = DF_completo, main = paste0(""Gráfico 3."", i), xlab = ""Promedio"", ylab = ""Tiempo extra café"", horizontal=T, names=c(""N1"",""N2"",""N3"",""N4""))"

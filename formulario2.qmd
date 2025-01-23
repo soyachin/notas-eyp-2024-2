@@ -1,0 +1,119 @@
+### Distribución Binomial
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = n \cdot p
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = n \cdot p \cdot (1 - p)
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \sqrt{n \cdot p \cdot (1 - p)}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sqrt{n \cdot p \cdot (1 - p)}}{n \cdot p}
+    $$
+
+### Distribución Binomial Negativa
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = \frac{k \cdot (1 - p)}{p}
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = \frac{k \cdot (1 - p)}{p^2}
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \sqrt{\frac{k \cdot (1 - p)}{p^2}}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sqrt{\frac{k \cdot (1 - p)}{p^2}}}{\frac{k \cdot (1 - p)}{p}}
+    $$
+
+### Distribución Hipergeométrica
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = n \cdot \frac{K}{N}
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = n \cdot \frac{K}{N} \cdot \frac{N - K}{N} \cdot \frac{N - n}{N - 1}
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \sqrt{n \cdot \frac{K}{N} \cdot \frac{N - K}{N} \cdot \frac{N - n}{N - 1}}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sqrt{n \cdot \frac{K}{N} \cdot \frac{N - K}{N} \cdot \frac{N - n}{N - 1}}}{n \cdot \frac{K}{N}}
+    $$
+
+### Distribución Geométrica
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = \frac{1 - p}{p}
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = \frac{1 - p}{p^2}
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \sqrt{\frac{1 - p}{p^2}}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sqrt{\frac{1 - p}{p^2}}}{\frac{1 - p}{p}}
+    $$
+
+### Distribución de Poisson
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = \lambda
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = \lambda
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \sqrt{\lambda}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sqrt{\lambda}}{\lambda}
+    $$
+
+### Distribución Uniforme
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = \frac{a + b}{2}
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = \frac{(b - a)^2}{12}
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \sqrt{\frac{(b - a)^2}{12}}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sqrt{\frac{(b - a)^2}{12}}}{\frac{a + b}{2}}
+    $$
+
+### Distribución Normal
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = \mu
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = \sigma^2
+    $$
+-   **Desviación Estándar**: $$
+    \sigma
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = \frac{\sigma}{\mu}
+    $$
+
+### Distribución Exponencial
+
+-   **Esperanza (media)**: $$
+    \mathbb{E}[X] = \frac{1}{\lambda}
+    $$
+-   **Varianza**: $$
+    \text{Var}(X) = \frac{1}{\lambda^2}
+    $$
+-   **Desviación Estándar**: $$
+    \sigma = \frac{1}{\lambda}
+    $$
+-   **Coeficiente de Variación**: $$
+    CV = \frac{\sigma}{\mathbb{E}[X]} = 1
+    $$

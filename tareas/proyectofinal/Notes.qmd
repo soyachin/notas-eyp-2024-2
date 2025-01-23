@@ -1,0 +1,91 @@
+---
+title: "Notas de presentación"
+format: html
+editor: visual
+---
+
+Relevancia:
+
+Quién no ha visto un estudiante universitario con una taza o vaso de café mientras estudia. El café es algo que está arraigado en la vida estudiantil y observando de forma empírica podemos hacernos las siguientes preguntas:
+
+¿Se puede afirmar que los estudiantes de UTEC dependen del café para sus rutinas de estudios? y si es así, ¿Este mismo influye en su desempeño autopercibido? Además, respecto al café, sabemos que este tiene un gran significado tanto cultural y social asi que esto nos lleva a la siguiente pregunta: en UTEC se tiene una cultura de café? Estas preguntas son importantes pues nos permiten explorar las dinámicas tanto académicas y sociales en nuestra joven universidad.
+
+Teniendo esto en cuenta podemos delimitar los objetivos que son:
+
+Antes que nada, queremos dejar en claro, que solo estamos tomando en cuenta solo las observaciones de las personas que SÍ toman café. Así, nos quedamos con 841 observaciones y basándonos en ellas hicimos el trabajo que vamos a presentar.
+
+```{r}
+library(tidyverse)
+# Crear la tabla de datos
+# Crear la tabla de datos
+datos <- DF %>%
+  select(Frecuencia_reunion, Frecuencia_cafeterias_semana, Establecimiento_compra) %>%
+  mutate(
+    Frecuencia_reunion = factor(Frecuencia_reunion, 
+                                levels = c("Nunca", "Rara vez", "Algunas veces", "Siempre"), 
+                                ordered = TRUE),
+    Frecuencia_cafeterias_semana = factor(Frecuencia_cafeterias_semana, 
+                                          levels = c("0", "1", "2", "3", "4 a más"), 
+                                          ordered = TRUE),
+    Establecimiento_compra = factor(Establecimiento_compra)
+  )
+
+# Crear la tabla de mosaico
+tabla_mosaico <- table(datos$Frecuencia_reunion, datos$Establecimiento_compra)
+
+# Calcular las proporciones usando prop.table()
+probabilidades <- prop.table(tabla_mosaico)
+
+# Convertir a porcentajes y redondear al segundo decimal
+porcentajes <- round(probabilidades * 100, 2)
+
+# Mostrar los porcentajes
+print(porcentajes)
+
+```
+
+```{r}
+# Gráfico de barras para Frecuencia de Reunión 
+frecuencia_reunion <- prop.table(table(DF$Frecuencia_reunion))
+barplot_frecuencia_reunion <- barplot(
+  frecuencia_reunion,
+  main = "Frecuencia de Reunión",
+  xlab = "Categoría",
+  ylab = "Probabilidad",
+  col = "lightblue",
+  ylim = c(0, max(frecuencia_reunion) + 0.05)
+)
+
+# Añadir etiquetas de probabilidades
+text(
+  x = barplot_frecuencia_reunion, 
+  y = frecuencia_reunion, 
+  labels = paste0(round(frecuencia_reunion * 100, 2), "%"),
+  pos = 3, # Posicionamiento encima de las barras
+  cex = 1, 
+  col = "black"
+)
+
+# Gráfico de barras para Establecimiento de Compra con ajuste del tamaño de etiquetas
+barplot_establecimiento_compra <- barplot(
+  establecimiento_compra,
+  main = "Establecimiento de Compra",
+  xlab = "Categoría",
+  ylab = "Probabilidad",
+  col = "lightgreen",
+  ylim = c(0, max(establecimiento_compra) + 0.05),
+  cex.names = 0.5  # Ajusta el valor según lo necesites
+)
+
+# Añadir etiquetas de probabilidades
+text(
+  x = barplot_establecimiento_compra, 
+  y = establecimiento_compra, 
+  labels = paste0(round(establecimiento_compra * 100, 2), "%"),
+  pos = 3, # Posicionamiento encima de las barras
+  cex = 1, 
+  col = "black"
+)
+
+
+```

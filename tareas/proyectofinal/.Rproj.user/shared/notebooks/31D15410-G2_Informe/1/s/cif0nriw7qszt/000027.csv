@@ -1,0 +1,4 @@
+"0","boxplot(DF$Gasto_semanal_cafe, horizontal = TRUE, "
+"0","        main = paste(""Gráfico 2."", i), "
+"0","        xlab = ""Gráfico de caja del gasto semanal en café"", "
+"0","        col = ""gray90"")"

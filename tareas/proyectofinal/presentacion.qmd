@@ -1,0 +1,621 @@
+---
+title: "Análisis del Consumo de Café y sus Impactos en Estudiantes de UTEC durante el Semestre 2024-II"
+author: "Grupo 2"
+format: 
+  revealjs: 
+    theme: sky
+    transition: slide
+    slideNumber: true
+    controls: true
+    progress: true
+    center: true
+    width: 1600
+    height: 900
+    embed-resources: true
+header-includes:
+  - |
+    <style>
+      .reveal section p, .reveal section ul, .reveal section ol {
+          display: inline-block;
+          font-size: 0.6em;
+          line-height: 1.2em;
+          vertical-align: top;
+          text-align: justify;
+      }
+    </style>
+---
+
+## Antecedentes
+
+**Relevancia:** Estando el consumo de café tan presente en la vida cotidiana, por una variedad de razones, es importante analizar tanto los hábitos de consumo asociados a él como sus impactos.
+
+**Contexto:** La población objetivo son los estudiantes de pregrado en UTEC que consumen café. Se utilizó un muestreo aleatorio simple. Los datos se recolectaron del 16 al 24 de septiembre mediante una encuesta en línea accesible por un QR en la universidad. La encuesta tenía preguntas generales y específicas, filtrando con una pregunta sobre el consumo de café dando así una fuente de datos primaria.
+
+## Objetivos
+
+**General:**
+
+Investigar sobre el consumo de café y su impacto en los estudiantes de pregrado de la Universidad de Ingeniería y Tecnología (UTEC) durante el semestre académico 2024-II
+
+**Específicos:**
+
+-   Averiguar el impacto autopercibido del café en el rendimiento académico de los estudiantes de UTEC.
+-   Averiguar los hábitos de consumo de los estudiantes de UTEC respecto al café y determinar la presencia de una cultura cafetera.
+
+## Variables {.small}
+
+```{r,echo=FALSE}
+library(fitdistrplus)
+library(tidyverse)
+library(rriskDistributions)
+library(readxl)
+library(VennDiagram)
+library(grid)
+DF <- read_csv("datos_cafe_limpios.csv")
+
+
+
+calcular_moda <- function(x) {
+  uniq_x <- unique(x)
+  uniq_x[which.max(tabulate(match(x, uniq_x)))]
+}
+sd_cv <- function(data) {
+  sd_value <- sd(data, na.rm = T)               
+  mean_value <- mean(data, na.rm = T)           
+  cv <- (sd_value / mean_value) * 100 
+  
+  print(paste0("La desviación estándar es:", round(sd_value, 2)))
+  print(paste0("El coeficiente de variación es:", round(cv, 2), "%"))
+}
+
+r <- function(x) {
+  round(x,2)
+}
+```
+
+```{=html}
+<style>
+table {
+    font-size: 30px;
+}
+
+</style>
+```
+### **Objetivo 1:**
+
+| **Variable**           | **Tipo de variable**  |
+|------------------------|-----------------------|
+| **Promedio**           | Cuantitativa continua |
+| **Consumo_antes_univ** | Cuantitativa discreta |
+| **Consumo_examen_dia** | Cuantitativa discreta |
+| **Tiempo extra cafe**  | Cualitativa ordinal   |
+| **Animo_cafe**         | Cualitativa nominal   |
+
+### **Objetivo 2:**
+
+| **Variable**                     | **Tipo de variable**  |
+|----------------------------------|-----------------------|
+| **Gasto_semanal_cafe**           | Cuantitativa continua |
+| **Tazas_por_dia**                | Cuantitativa discreta |
+| **Frecuencia_Reunion**           | Cualitativa ordinal   |
+| **Frecuencia_cafeterias_semana** | Cualitativa ordinal   |
+| **Establecimiento_compra**       | Cualitativa nominal   |
+
+## Análisis descriptivo
+
+::: columns
+::: {.column width="50%"}
+#### Correlación de Frecuencia reunión en cafeterías y Establecimientos de compra de café
+
+```{r}
+datos <- DF %>%
+  select(Frecuencia_reunion, Frecuencia_cafeterias_semana, Establecimiento_compra) %>%  # Usa los nombres correctos
+  mutate(
+    Frecuencia_reunion = factor(Frecuencia_reunion, 
+                                 levels = c("Nunca", "Rara vez", "Algunas veces", "Siempre"), 
+                                 ordered = TRUE),
+    Frecuencia_cafeterias_semana = factor(Frecuencia_cafeterias_semana, 
+                                           levels = c("0", "1", "2", "3", "4 a más"), 
+                                           ordered = TRUE),
+    Establecimiento_compra = factor(Establecimiento_compra)
+  )
+
+tabla_mosaico <- table(datos$Frecuencia_reunion, datos$Establecimiento_compra)
+
+mosaicplot(tabla_mosaico,
+           xlab = "Frecuencia de Reuniones",
+           ylab = "",  # Mantener en blanco para eliminar etiquetas de eje Y
+           col = adjustcolor(rainbow(ncol(tabla_mosaico)), alpha.f = 0.7),
+           border = "white",
+           las = 1,
+           cex.axis = 0.5)  
+
+title(sub="Relación de la frecuencia de las reuniones por establecimiento de compra")
+```
+:::
+
+::: {.column width="50%"}
+#### Correlación de Tazas por día y Promedio
+
+```{r}
+correlacion_total <- cor(DF$Tazas_por_dia, DF$Promedio, use = "complete.obs")
+print(paste0("Coeficiente de correlación entre Tazas por día y Promedio académico:", correlacion_total))
+
+DF_naomit <- na.omit(DF)
+
+# Establecer la ecuación de regresión lineal
+modelo <- lm(DF_naomit$Promedio~DF_naomit$Tazas_por_dia)
+intercepto <- coef(modelo)[1]
+pendiente <- coef(modelo)[2]
+paste0("La ecuación de regresión para un modelo lineal es: y = ",pendiente,"x + ",intercepto)
+
+# Crear el gráfico
+ggplot(DF_naomit, aes(x = Tazas_por_dia, y = Promedio)) +
+  geom_point(color = "blue") +  # Puntos del gráfico
+  geom_smooth(method = "lm", se = FALSE, color = "peru") + 
+  labs(x = "Tazas de café por día", 
+       y = "Promedio Académico", 
+       subtitle = "Relación entre consumo de tazas de café por día y promedio académico") +  # Agregar subtítulo aquí
+  theme_minimal()
+
+```
+:::
+:::
+
+## Probabilidad Empírica
+
+::: columns
+::: {.column width="50%"}
+**Experimento Aleatorio 1** ($EA_{1}$): Rendimiento Académico
+
+Seleccionar al azar un estudiante y observar su promedio académico.
+
+```{r, echo=FALSE}
+i <- 1
+total_estudiantes <- nrow(DF)
+
+DF_categorias <- data.frame(
+  Categoria = c("Desaprobado", "Aprobado", "Sobresaliente"),
+  Frecuencia = c(
+    sum(DF$Promedio >= 0 & DF$Promedio < 11, na.rm = TRUE),
+    sum(DF$Promedio >= 11 & DF$Promedio < 17, na.rm = TRUE),
+    sum(DF$Promedio >= 17 & DF$Promedio <= 20, na.rm = TRUE)
+  )
+)
+
+# Calcula las probabilidades
+DF_categorias$Probabilidad <- DF_categorias$Frecuencia / total_estudiantes
+
+# Gráfico de barras
+bar <- barplot(
+  DF_categorias$Probabilidad,
+  names.arg = DF_categorias$Categoria,
+  xlab = "Criterio",
+  ylab = "Probabilidad",
+  col = "lightgray",
+  ylim = c(0, max(DF_categorias$Probabilidad) + 0.2) # Ajuste de altura
+)
+
+# Añadir etiquetas de las probabilidades y frecuencias encima de las barras
+text(
+  x = bar, 
+  y = DF_categorias$Probabilidad + 0.1, 
+  labels = paste0(round(DF_categorias$Probabilidad, 3), " (", DF_categorias$Frecuencia, ")"),  
+  cex = 1, 
+  col = "black" 
+)
+
+i <- i + 1
+
+```
+:::
+
+::: {.column width="50%"}
+**Experimento Aleatorio 2** ($EA_{2}$): Frecuencia de Reunión para Tomar Café
+
+Seleccionar al azar un estudiante y observar su frecuencia de reunión para tomar café.
+
+```{r, echo=FALSE}
+total_estudiantes <- nrow(DF)
+
+DF_categorias_cafe <- data.frame(
+  Categoria = c("Normal", "Intermedio", "Excesivo"),
+  Frecuencia = c(
+    sum(DF$Tazas_por_dia >= 0 & DF$Tazas_por_dia <= 3, na.rm = TRUE),
+    sum(DF$Tazas_por_dia >= 4 & DF$Tazas_por_dia <= 8, na.rm = TRUE),
+    sum(DF$Tazas_por_dia >= 9 & DF$Tazas_por_dia <= 15, na.rm = TRUE)
+  )
+)
+
+# Calcula las probabilidades
+DF_categorias_cafe$Probabilidad <- DF_categorias_cafe$Frecuencia / total_estudiantes
+
+# Gráfico de barras
+barplot(
+  DF_categorias_cafe$Probabilidad,
+  names.arg = DF_categorias_cafe$Categoria,
+  xlab = "Categoría de consumo",
+  ylab = "Probabilidad",
+  col = "lightgray",
+  ylim = c(0, max(DF_categorias_cafe$Probabilidad) + 0.1)
+)
+
+# Añadir etiquetas de las probabilidades encima de las barras
+text(
+  x = barplot(
+    DF_categorias_cafe$Probabilidad, 
+    plot = FALSE
+  ),
+  y = DF_categorias_cafe$Probabilidad + 0.05, 
+    labels = paste0(round(DF_categorias_cafe$Probabilidad, 3), " (", DF_categorias_cafe$Frecuencia, ")"),
+  cex = 1, 
+  col = "black"
+)
+
+```
+:::
+
+-   Conclusión: Predomina una baja frecuencia de reuniones, siendo "Rara vez" ($37.93\%$) la categoría más común.
+:::
+
+## Probabilidad Condicional
+
+::: {.columns style="font-size: 0.7em;"}
+::: {.column width="50%"}
+**Primer Caso**
+
+**Eventos**
+
+-   $E_1$: Seleccionar un estudiante con promedio aprobatorio ($11 \leq Promedio \leq 20$).
+-   $E_2$: Seleccionar un estudiante que consume de 0 a 3 tazas de café el día del examen.
+
+**Cálculos**
+
+```{r, echo=FALSE}
+i <- 1
+n_total <- nrow(DF)
+
+# Estudiantes que tienen promedio aprobatorio
+DF_PA <- filter(DF, Promedio >= 11 & Promedio <= 20)
+n_PA <- nrow(DF_PA)
+
+# Estudiantes que consumen entre 0 a 3 tazas de café en un día de examen
+DF_consumen_cafe <- filter(DF, Consumo_examen_dia >= 0 & Consumo_examen_dia <= 3)
+n_cafe <- nrow(DF_consumen_cafe)
+
+# Estudiantes que cumplen ambos criterios
+DF_PA2 <- filter(DF, Promedio >= 11 & Promedio <= 20 & Consumo_examen_dia >= 0 & Consumo_examen_dia <= 3)
+n_PA_cafe <- nrow(DF_PA2)
+
+grid.newpage()
+a <- draw.pairwise.venn(
+  area1 = n_PA,
+  area2 = n_cafe,
+  cross.area = n_PA_cafe,
+  category = c("Promedio Aprobatorio", "0-3 Tazas de Café"),
+  fill = c("lightblue", "lightpink"),
+  lty = "blank",
+  cex = 1.5,
+  cat.cex = 1.5,
+  cat.pos = c(-15, 15),
+  cat.dist = 0.05,
+  filename = NULL,
+  lwd = 2,
+  )
+
+```
+
+```{r}
+P_E1<-nrow(DF_PA)/nrow(DF)
+cat("P(E1):",round(P_E1,2),"\n")
+
+P_E2<-nrow(DF_consumen_cafe)/nrow(DF)
+cat("P(E2):",round(P_E2,2),"\n")
+
+P_E1nE2 <- nrow(DF_PA2)/nrow(DF)
+cat("P(E1 ∩ E2):",round(P_E1nE2,2),"\n")
+
+cat("Independencia: P(E1 ∩ E2) = P(E1)*P(E2):",round(P_E1nE2,2) == round(P_E1*P_E2,2),"\n")
+
+```
+
+Probabilidad de escoger a un estudiante de UTEC al azar cuyo promedio sea de aprobado (\<=11) si consume entre 0 a 3 tazas de café el día del examen. $$
+P(E_1 \mid E_2) = \frac{P(E_1 \cap E_2)}{P(E_2)} = \frac{0.71}{0.73} \approx 0.97
+$$
+:::
+
+::: {.column width="50%"}
+**Segundo Caso**
+
+**Eventos**
+
+-   $E_1$: Gasto semanal bajo ($0 \leq Gasto < 50$).
+-   $E_2$: Gasto semanal medio ($50 \leq Gasto \leq 100$).
+-   $E_3$: Prefiere Starbucks o cafeterías artesanales.
+
+**Probabilidades condicionales**
+
+1.  $P(E_3|E_1)$: Probabilidad de que un estudiante frecuente Starbucks o cafeterías artesanales si gasta hasta 50 soles semanalmente.
+2.  $P(E_3|E_2)$: Probabilidad de que un estudiante frecuente Starbucks o cafeterías artesanales si gasta entre 50 y 100 soles semanalmente.
+
+```{r echo=FALSE}
+
+DF_g1 <- filter(DF, Gasto_semanal_cafe < 50)
+DF_g2 <- filter(DF, Gasto_semanal_cafe >= 50 & Gasto_semanal_cafe <= 100)
+DF_ec <- filter(DF, Establecimiento_compra %in% c("Starbucks", "Cafetería Artesanal"))
+
+# Intersecciones
+DF_g1_ec <- filter(DF, Gasto_semanal_cafe < 50 & Establecimiento_compra %in% c("Starbucks", "Cafetería Artesanal")) # E3 ∩ E1
+DF_g2_ec <- filter(DF, Gasto_semanal_cafe >= 50 & Gasto_semanal_cafe <= 100 & Establecimiento_compra %in% c("Starbucks", "Cafetería Artesanal")) # E3 ∩ E2
+
+# Probabilidades
+P_g1 <- nrow(DF_g1) / nrow(DF)
+P_g2 <- nrow(DF_g2) / nrow(DF)
+P_ec <- nrow(DF_ec) / nrow(DF)
+
+# Intersecciones y probabilidades condicionales
+P_g1_ec <- nrow(DF_g1_ec) / nrow(DF)
+P_ec_given_g1 <- P_g1_ec / P_g1
+
+P_g2_ec <- nrow(DF_g2_ec) / nrow(DF)
+P_ec_given_g2 <- P_g2_ec / P_g2
+
+# Resultados
+n_g1 <- nrow(DF_g1)
+n_ec <- nrow(DF_ec)
+n_g1_ec <- nrow(DF_g1_ec)
+
+n_g2 <- nrow(DF_g2)
+n_g2_ec <- nrow(DF_g2_ec)
+
+```
+
+```{r, echo=FALSE}
+# Añadir la columna de frecuencias al dataframe de probabilidades
+DF_probabilidades <- data.frame(
+  Evento = c("P(E1)", "P(E2)", "P(E3)", "P(E3|E1)", "P(E3|E2)"),
+  Probabilidad = r(c(P_g1, P_g2, P_ec, P_ec_given_g1, P_ec_given_g2)),
+  Frecuencia = c(n_g1, n_g2, n_ec, n_g1_ec, n_g2_ec)
+)
+
+DF_probabilidades
+
+
+independencia_g1_ec <- round(P_g1_ec, 2) == round(P_g1 * P_ec, 2)
+
+paste("¿E1 y E3 son independientes?:", independencia_g1_ec)
+
+independencia_g2_ec <- round(P_g2_ec, 2) == round(P_g2 * P_ec, 2)
+
+paste("¿E2 y E3 son independientes?:", independencia_g2_ec)
+
+
+# Crear la tabla de contingencia para el gráfico de mosaico
+tabla_contingencia <- matrix(c(
+  n_g1 - n_g1_ec,  # Estudiantes que gastan <50 y no van a Starbucks/Cafetería
+  n_g1_ec,         # Estudiantes que gastan <50 y van a Starbucks/Cafetería
+  n_g2 - n_g2_ec,  # Estudiantes que gastan 50-100 y no van a Starbucks/Cafetería
+  n_g2_ec          # Estudiantes que gastan 50-100 y van a Starbucks/Cafetería
+), nrow = 2, byrow = TRUE)
+
+colnames(tabla_contingencia) <- c("Otro", "Starbucks/Cafetería")
+rownames(tabla_contingencia) <- c("<50", "50-100")
+
+# Colores tenues para los mosaicos
+colores <- c("lightblue", "lightpink")
+
+# Crear el gráfico de mosaico con colores y frecuencias
+mosaicplot(tabla_contingencia, 
+           main = paste0("Gráfico 4.2.", i) , 
+           xlab = "Establecimiento", 
+           ylab = "Gasto", 
+           color = colores, 
+           border = "gray")
+
+title(sub= "Gráfico de Mosaico de Probabilidades Condicionales")
+
+
+```
+:::
+:::
+
+## Variables Aleatorias Discretas
+
+::: columns
+::: {.column width="50%"}
+**Distribución hipergeométrica**
+
+**Tiempo de estudio extra al consumir café**
+
+Se desea conocer la probabilidad de encontrar 20 estudiantes que estudian más de 40 minutos si se toma una muestra de 30 estudiantes.
+
+```{r}
+m <- nrow(DF) # Total de estudiantes
+cat("Total de estudiantes: ",m,"\n")
+DF_de1 <- filter(DF, Tiempo_estudio_extra_cafe == "Más de 40 minutos") # DF con casos de Éxito
+n <- nrow(DF_de1) # Num de casos de exito 
+cat("Número de casos con éxito en la población: ",n,"\n")
+
+k <- 30
+cat("Tamaño de la muestra: ",k,"\n")
+
+x <- 20
+cat("Número de éxitos en la muestra :",x,"\n")
+
+```
+
+**Probabilidad dhyper(xo,m,n,k)"**
+
+```{r}
+pe1 <- dhyper(x, m, n, k)
+paste("P(X=20):",r(pe1))
+```
+
+**Propiedades**
+
+```{r}
+Ex <- k*(n/m)
+Vx <- k*(n/m)*((m-n)/m)*((m-k)/(m-1)) 
+cv <- sqrt(Vx)/Ex
+
+paste("E(X):", r(Ex))
+paste("V(X):", r(Vx))
+paste("CV:", r(cv))
+```
+:::
+
+::: {.column width="50%"}
+**Distribución binomial**
+
+**Frecuencia de reunión en cafeterías**
+
+Se desea conocer la probabilidad de que, al seleccionar 10 estudiantes al azar con reposición, al menos la mitad de ellos tengan una frecuencia de reunión de "Algunas veces" o de "Siempre".
+
+```{r}
+x=5
+cat("Cantidad de éxitos acumulados deseados:",x,"\n")
+#Cantidad de alumnos seleccionados (ensayos o replicas realizadas)
+n=10
+cat("Cantidad de alumnos seleccionados:",n,"\n")
+
+#Probabilidad empirica del exito
+p=sum(DF$Frecuencia_reunion %in% c("Siempre","Algunas veces"))/nrow(DF)
+cat("Probabilidad empirica del éxito:",p)
+```
+
+**Probabilidad pbinom(x,n,p)"**
+
+```{r}
+#Calculo de la probabilidad
+pe2 <- pbinom(x,n,p,lower.tail = FALSE)
+paste("P(X≤5):",r(pe2))
+```
+
+**Propiedades**
+
+```{r}
+Ex2 <- n*p
+Vx2 <- n*p*(1-p)
+CVx2 <- sqrt(Vx)/Ex
+
+paste("E(X):", r(Ex2))
+paste("V(X):", r(Vx2))
+paste("CV:", r(CVx2))
+```
+:::
+:::
+
+## Variables Aleatorias Continuas
+
+::: {.columns style="font-size: 0.9em;"}
+::: {.column width="50%"}
+**Distribución exponencial**
+
+**Gasto semanal en café**
+
+```{r}
+# Calcular la tasa lambda para la distribución exponencial
+lambda <- 1 / mean(DF$Gasto_semanal_cafe)
+
+# Crear el histograma con la densidad empírica
+hist(DF$Gasto_semanal_cafe, 
+     breaks = 45, 
+     probability = TRUE, 
+     main = "Gráfico del Gasto semanal en café", 
+     col = "lightblue")
+
+# Línea de densidad empírica
+lines(density(DF$Gasto_semanal_cafe, na.rm = TRUE), lwd = 3, col = "red")
+
+# Superponer la curva de densidad teórica (distribución exponencial)
+curve(dexp(x, rate = lambda), col = "blue", lwd = 2, add = TRUE)
+
+# Añadir leyenda
+legend("topright", legend = c("Empírica", "Exponencial Ajustada"),
+       col = c("red", "blue"), lwd = 2)
+
+```
+
+**Propiedades:**
+
+```{r}
+lambda <- 1 / mean(DF$Gasto_semanal_cafe)
+# Calcular la esperanza (media)
+esperanza <- 1 / lambda
+
+# Calcular la varianza
+varianza <- 1 / (lambda^2)
+
+# Calcular la desviación estándar (sigma)
+sigma <- sqrt(varianza)
+
+print(paste("Tasa lambda:", r(lambda)))
+print(paste("Esperanza (mu):", r(esperanza)))
+print(paste("Varianza (sigma^2):", r(varianza)))
+print(paste("Desviación Estándar (sigma):", r(sigma)))
+
+```
+:::
+
+::: {.column width="50%"}
+**Distribución normal**
+
+**Promedio**
+
+```{r}
+hist(DF$Promedio, 
+     breaks = 30, 
+     probability = TRUE, 
+     main = "Gráfico del Promedio", 
+     col = "lightblue")
+
+# Línea de densidad empírica
+lines(density(DF$Promedio, na.rm = TRUE), lwd = 3, col = "red")
+
+# Línea de densidad teórica (distribución normal)
+lines(seq(min(DF$Promedio, na.rm = TRUE), max(DF$Promedio, na.rm = TRUE), length.out = 100),
+      dnorm(seq(min(DF$Promedio, na.rm = TRUE), max(DF$Promedio, na.rm = TRUE), length.out = 100),
+            mean = mean(DF$Promedio, na.rm = TRUE),
+            sd = sd(DF$Promedio, na.rm = TRUE)),
+      lwd = 2, col = "darkgreen")
+
+```
+
+```{r}
+moda <- calcular_moda(DF$Promedio)
+print(paste("Moda:", r(moda)))
+
+media <- mean(DF$Promedio)
+print(paste("Media:", r(media)))
+
+mediana <- median(DF$Promedio)
+print(paste("Mediana:", r(mediana)))
+
+```
+
+**Propiedades**
+
+```{r}
+mu <- media
+sigma <- sd(DF$Promedio, na.rm = TRUE)
+print(paste("Sigma:", r(sigma)))
+
+f <- function(x) {
+  (1 / (sigma * sqrt(2 * pi))) * exp(-((x - mu)^2) / (2 * sigma^2))
+}
+
+esperanza <- integrate(function(x) x * f(x), 0, 20)$value
+cat("Valor esperado E(X) =", r(esperanza), "\n")
+
+# Calcular la integral para obtener E(X^2) en el rango [0, 20]
+expected_square <- integrate(function(x) x^2 * f(x), 0, 20)$value
+
+# Calcular la varianza Var(X)
+variance <- expected_square - esperanza^2
+cat("Varianza Var(X) =", r(variance), "\n")
+
+```
+:::
+:::
+
+## Conclusiones

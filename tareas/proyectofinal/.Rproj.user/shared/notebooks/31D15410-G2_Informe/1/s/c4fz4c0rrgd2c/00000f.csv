@@ -1,0 +1,8 @@
+"0","esperanza <- integrate(function(x) x * f(x), 0, 20)$value"
+"0","cat(""Valor esperado E(X) ="", r(esperanza), ""\n"")"
+"1","Valor esperado E(X) ="
+"1"," "
+"1","14.46"
+"1"," "
+"1","
+"

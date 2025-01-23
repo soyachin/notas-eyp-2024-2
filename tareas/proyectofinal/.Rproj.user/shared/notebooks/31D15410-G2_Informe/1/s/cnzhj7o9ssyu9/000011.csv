@@ -1,0 +1,3 @@
+"0",""
+"0","# Añadir etiquetas de frecuencia encima de cada barra"
+"0","text(barp, frecuencias + 0.5, labels = frecuencias, pos = 3, cex = 0.8, col = ""blue"")"

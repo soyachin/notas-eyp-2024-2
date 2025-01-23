@@ -1,0 +1,424 @@
+# Formulario Probabilidades
+
+## Distribuciones Discretas
+
+### IMPORTANTE:
+
+Para las distribuciones discretas en RStudio, el programa solo considera dos casos y por ello debemos adaptarlos:
+
+$$
+R \cases{P(x \leq a) \\ P(x>b)}
+$$
+
+Por ejemplo: Si piden $P(x\geq a) \rightarrow P(x>a-1)$.
+
+### Binomial
+
+> Bernoulli es una Binomial con N = 1 (1 experimento)
+
+**Parámetros**
+
+-   $x_o$ = número que se busca.
+
+-   n = Muestra/veces que se repite el experimento (size).
+
+-   p = Probabilidad de éxito (prob).
+
+-   lower.tail: logical; if TRUE (default), probabilities are P\[X≤x\], otherwise, P\[X\>x\].
+
+**Probabilidad puntual**
+
+```{r}
+# Buscas P(X<X_o) o P(X>X_o)
+# pbinom(xo, size, prob)
+```
+
+**Probabilidad acumulada**
+
+```{r}
+# Buscas P(X=x_o)
+# dbinom(xo, size, prob)
+```
+
+**Otros**
+
+*Esperado:* 𝑬(𝑿)=𝒏𝒑
+
+*Varianza:* 𝑽(𝑿)=𝒏.𝒑.𝒒
+
+### Binomial Negativa \| Pascal
+
+> Los parametros que pregunten en canvas son K (exitos deseados) y P (probabilidad)
+
+**Parámetros**
+
+-   K = éxitos que se desean
+
+-   P = probabilidad de éxito
+
+-   X = \# de experimentos hasta obtener K éxitos
+
+-   Y = \# de fracasos hasta obtener K éxitos
+
+-   Y = X - K
+
+**Probabilidad puntual**
+
+```{r}
+# Buscas P(Y=yo)
+# dnbinom(yo, k, p)
+```
+
+**Probabilidad acumulada**
+
+```{r}
+# Buscas P(Y<= yo)
+# pnbinom(xo, size, prob)
+```
+
+**Otros**
+
+Esperado: 𝑬(𝑿)=𝒌/𝒑
+
+Varianza: 𝑽(𝑿)=𝒌.𝒒/𝒑\^𝟐
+
+### Geométrica
+
+**Parámetros**
+
+-   X = \# de intentos hasta obtener primer éxito
+
+-   Y = \# de fracasos hasta obtener el primer éxito
+
+-   Y = X - 1
+
+**Probabilidad puntual**
+
+```{r}
+# Buscas P(Y=yo)
+# dgeom(yo,p)
+```
+
+**Probabilidad acumulada**
+
+```{r}
+# Buscas P(Y<= yo)
+# pgeom(yo, p)
+```
+
+**Otros**
+
+P(exito) = p
+
+P(fracaso) = q
+
+*Esperado:* 𝑬(𝑿)=𝟏/𝒑
+
+*Varianza:* 𝑽(𝑿)=𝒒/(𝒑\^𝟐)
+
+### Hipergeométrica
+
+> Sin reposición
+
+**Parámetros**
+
+-   N: población
+
+-   M: \# éxitos
+
+-   n: \# de fracasos
+
+-   k: muestra
+
+-   Notar que : **m+ n = N**
+
+*𝑿=# de éxitos en la muestra sacada de una población de tamaño N.*
+
+**Probabilidad puntual**
+
+```{r}
+# Buscas P(X=xo)
+# dhyper(xo,m,n,k)
+```
+
+**Probabilidad acumulada**
+
+```{r}
+# Buscas P(X<= xo)
+# phyper(xo,m,n,k)
+```
+
+**Otros**
+
+*Esperado:*
+
+$$
+E(X)=K.\frac{m}{N}
+$$
+
+*Varianza:*
+
+$$
+V(X)=K.\frac{m}{N}.(1-\frac{m}{N})(\frac{N-k}{N-1})
+$$
+
+### Poisson
+
+**Parámetros**
+
+-   X = \# de éxitos en una medida M
+
+-   L = promedio de éxitos en una medida
+
+**Probabilidad puntual**
+
+```{r}
+# Buscas P(X=xo)
+# dpois(xo,L)
+```
+
+**Probabilidad acumulada**
+
+```{r}
+# Buscas P(X<= xo)
+# ppois(xo,L)
+```
+
+**Otros**
+
+Esperado: **E(X)= L** (tener en cuenta que L debe llegar a tener la misma medida que X)
+
+Varianza: **V(X)= L**
+
+## Distribuciones Continuas
+
+### Normal
+
+**Parámetros**
+
+Variable aleatoria:
+
+$$ x\rightarrow N(\mu, \sigma) $$
+
+Parámetros: En una normal se necesita dos valores: la media y la desviación.
+
+$$ \mu = E(x)=  \text{media de x} $$
+
+$$ \sigma = Desviación = \sqrt{V(x)} $$
+
+*Rango:* −∞\<𝑋\<∞
+
+Necesariamente se debe indicar en el texto que la variable es Normal. Debe ser un dato.
+
+Las probabilidades se hallan con R
+
+```{r}
+# pnorm(xo, mu, sigma)  ==> P(x<=xo=) =???
+```
+
+```{r}
+# qnorm(p, mu, sigma)   ==> P(x<= ???) =p
+```
+
+Hay problemas donde **mu y sigma no se conocen** ==\>se estandariza y se usa la siguiente variable normal:
+
+**NORMAL ESTANDAR:**
+
+Se obtiene haciendo:
+
+$$ z=\frac{x-\mu}{\sigma} $$
+
+Ventajas de Z:
+
+$$ \mu_{z}=E(z)=0 $$
+
+$$ \sigma_{z}=\sqrt{V(x)}=1 $$
+
+```{r}
+# pnorm(xo,0,1) ==> P(z<=x0)=???
+```
+
+```{r}
+# qnorm(p,0, 1) ==> P(Z<= ???)=P
+```
+
+### Uniforme
+
+Sea $X: U[a;b]$ entonces $a\le x \le b$
+
+**Parámetros**
+
+-   a
+
+-   b
+
+**Probabilidad de uniforme:**
+
+Siempre que $[c;d] \text{esté incluido en} [a,b]:$
+
+a--------------c//////////////d---------------b
+
+$P(c \le x \le d)=\frac{d-c}{b-a}$
+
+**Otros**
+
+**Esperado de X** ==\> $E(X)=\frac{a+b}{2}$
+
+**Varianza de X**==\> $V(X)=\frac{(b-a)^2}{12}$
+
+```{r}
+punif(15,6,18)- punif(11,6,18) #Nota: P(11<=X<=15)=P(X<=15)-P(X<=11)
+```
+
+### Exponencial
+
+**Parámetros**
+
+Debe tenerse como dato un valor **Beta,** que representa al promedio de las X.
+
+$$ \mu = E(X)= \beta  $$
+
+Además, se puede calcular su varianza:
+
+$$ \sigma^{2}=V(X)=\beta^{2} $$
+
+**En R** se usará
+
+$$ \lambda = \frac{1}{\beta} $$
+
+```{r}
+# pexp(xo, 1/beta)  ==> P(x<= xo)=???
+```
+
+```{r}
+# qexp(p, 1/beta)  ===> P(x<=???)=p
+```
+
+## MUCHO OJO - CANVAS
+
+Cuando nos dicen **valor promedio** o **valor esperado** nos piden la **ESPERANZA** pero: ¿de qué distribución?
+
+Del a prueba Z2-Sangre:
+
+> En una campaña de donación de sangre se reciben 200 donantes. El número esperado de donantes hasta ver el primero con tipo O-, correctamente redondeado a 2 decimales, es:
+
+![](images/clipboard-1948611244.png){width="726"}
+
+> En una campaña de donación de sangre se reciben 200 donantes. El valor esperado del número de donantes O−O−, correctamente redondeado a dos decimales, es:
+
+![](images/clipboard-4087055091.png)
+
+## Funciones útiles: cargar
+
+```{r}
+# Funciones para la distribución binomial
+# n: número de ensayos
+# p: probabilidad de éxito en cada ensayo
+
+esperanza_binomial <- function(n, p) {
+  return(n * p)
+}
+
+varianza_binomial <- function(n, p) {
+  return(n * p * (1 - p))
+}
+
+desviacion_binomial <- function(n, p) {
+  return(sqrt(varianza_binomial(n, p)))
+}
+
+cv_binomial <- function(n, p) {
+  return(desviacion_binomial(n, p) / esperanza_binomial(n, p))
+}
+```
+
+```{r}
+# Funciones para la distribución binomial negativa
+# k: número de éxitos
+# p: probabilidad de éxito en cada ensayo
+
+esperanza_binom_neg <- function(k, p) {
+  return(k * (1 - p) / p)
+}
+
+varianza_binom_neg <- function(k, p) {
+  return(k * (1 - p) / (p * p))
+}
+
+desviacion_binom_neg <- function(k, p) {
+  return(sqrt(varianza_binom_neg(k, p)))
+}
+
+cv_binom_neg <- function(k, p) {
+  return(desviacion_binom_neg(k, p) / esperanza_binom_neg(k, p))
+}
+
+```
+
+```{r}
+# Funciones para la distribución hipergeométrica
+# N: tamaño de la población
+# K: número total de éxitos en la población
+# n: tamaño de la muestra
+
+esperanza_hipergeometrica <- function(N, K, n) {
+  return(n * (K / N))
+}
+
+varianza_hipergeometrica <- function(N, K, n) {
+  return(n * (K / N) * (N - K) / N * (N - n) / (N - 1))
+}
+
+desviacion_hipergeometrica <- function(N, K, n) {
+  return(sqrt(varianza_hipergeometrica(N, K, n)))
+}
+
+cv_hipergeometrica <- function(N, K, n) {
+  return(desviacion_hipergeometrica(N, K, n) / esperanza_hipergeometrica(N, K, n))
+}
+
+```
+
+```{r}
+# Funciones para la distribución geométrica
+# p: probabilidad de éxito en cada ensayo
+
+esperanza_geometrica <- function(p) {
+  return((1 - p) / p)
+}
+
+varianza_geometrica <- function(p) {
+  return((1 - p) / (p * p))
+}
+
+desviacion_geometrica <- function(p) {
+  return(sqrt(varianza_geometrica(p)))
+}
+
+cv_geometrica <- function(p) {
+  return(desviacion_geometrica(p) / esperanza_geometrica(p))
+}
+
+```
+
+```{r}
+# Funciones para la distribución de Poisson
+# lambda: media del número de éxitos en un intervalo fijo
+
+esperanza_poisson <- function(lambda) {
+  return(lambda)
+}
+
+varianza_poisson <- function(lambda) {
+  return(lambda)
+}
+
+desviacion_poisson <- function(lambda) {
+  return(sqrt(varianza_poisson(lambda)))
+}
+
+cv_poisson <- function(lambda) {
+  return(desviacion_poisson(lambda) / esperanza_poisson(lambda))
+}
+
+```

@@ -1,0 +1,8 @@
+"0","# Añadir la columna de frecuencias al dataframe de probabilidades"
+"0","DF_probabilidades <- data.frame("
+"0","  Evento = c(""P(E1)"", ""P(E2)"", ""P(E3)"", ""P(E3|E1)"", ""P(E3|E2)""),"
+"0","  Probabilidad = r(c(P_g1, P_g2, P_ec, P_ec_given_g1, P_ec_given_g2)),"
+"0","  Frecuencia = c(n_g1, n_g2, n_ec, n_g1_ec, n_g2_ec)"
+"0",")"
+"0",""
+"0","DF_probabilidades"

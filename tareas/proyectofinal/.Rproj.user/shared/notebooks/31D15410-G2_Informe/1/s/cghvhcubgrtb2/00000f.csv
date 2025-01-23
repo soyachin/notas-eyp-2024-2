@@ -1,0 +1,2 @@
+"0","resultados <- lm(DF_si2$Tazas_por_dia~DF_si2$Consumo_antes_univ, data = DF_si2)"
+"0","plot(DF_si2$Consumo_antes_univ, DF_si2$Tazas_por_dia, xlab=""Tazas de café diarias antes de la universidad"", ylab=""Tazas de café diarias en la universidad"", col = ""pink"")"

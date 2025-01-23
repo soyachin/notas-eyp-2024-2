@@ -1,0 +1,7 @@
+"0",""
+"0","# Línea de densidad teórica (distribución normal)"
+"0","lines(seq(min(DF$Promedio, na.rm = TRUE), max(DF$Promedio, na.rm = TRUE), length.out = 100),"
+"0","      dnorm(seq(min(DF$Promedio, na.rm = TRUE), max(DF$Promedio, na.rm = TRUE), length.out = 100),"
+"0","            mean = mean(DF$Promedio, na.rm = TRUE),"
+"0","            sd = sd(DF$Promedio, na.rm = TRUE)),"
+"0","      lwd = 2, col = ""darkgreen"")"

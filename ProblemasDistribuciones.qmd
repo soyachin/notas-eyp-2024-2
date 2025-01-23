@@ -1,0 +1,255 @@
+```{r}
+library(tidyverse)
+DF<- read_csv("FAMOSOS2.xlsx - Hoja1 (3).csv")
+DF
+```
+
+Usando el Data Frame "FAMOSOS2.xlsx - Hoja1 (3).csv" responda lo siguiente:
+
+1\) De todos los personajes se ha seleccionado a 6 de ellos sin reposición. ¿Cuál es la probabilidad de encontrar entre estos a por lo menos 3 que hayan indicado que son deportistas?
+
+Solución:
+
+Se debe contar deportistas.
+
+Variable aleatoria:
+
+X= \# de personajes que han escrito que son deportistas.
+
+Exito: Que haya escrito que es deportista
+
+X es hipergeométrica: N=25 (población), m=?, n=?, K=6
+
+```{r}
+table(DF$Actividad, useNA="always")
+```
+
+Se aprecia que 10 personajes han escrito que son deportistas.
+
+N=25, m=10, n=15, K=6
+
+se pide: P(X\>=3)=P(X\>2)
+
+```{r}
+phyper(2,10,15,6,lower.tail=FALSE)
+```
+
+P(X\>=3)=0.455336
+
+2\) De todos los personajes, se selecciona con reposición a 8 de ellos. Calcule la probabilidad de encontrar entre ellos a 3, 4, 5 o 6 personas que hayan indicado que son hombres.
+
+Solución:
+
+X=# de personajes que indicaron que son hombres.
+
+Exito: Escribió "Hombre"
+
+muestra con reposición=8
+
+Binomial: n=8, p=P(éxito)=P(personaje que escribió HOMBRE)
+
+```{r}
+table(DF$Género, useNA="always")
+```
+
+Se encontró que hay 18 Masculinos
+
+p=P(Masculino)=18/25= 0.72
+
+Se desea: P(X=3 o 4 o 5 o 6)
+
+```{r}
+sum(dbinom(3:6, 8, 0.72))
+```
+
+P(X=3 o 4 o 5 o 6) =0.6952841
+
+3\) Se sabe que en promedio cada 3 minutos se llama a dos personajes distintos cuya edad supera 30 años. Calcule la probabilidad de que en 15 minutos sean llamados todos los que indicaron tener mas de 30 años.
+
+Solución:
+
+X=# de personajes que indicaron tener mas de 30 años que sean llamados en 15 min.
+
+Exito: que haya indicado tener mas de 30 años.
+
+usamos filter:
+
+```{r}
+DF30<- filter(DF, Edad>30)
+DF30
+```
+
+Son 16 personas que dicen tener mas de 30 años.
+
+Dato:
+
+en 3min ==\>A se llama a 2 en promedio, con edad\>30
+
+en 15min ==\> se llama a 10 en promedio ==\> L=10
+
+Se desea. P(X=16)
+
+```{r}
+dpois(16,10)
+```
+
+P(X=16)=0.02169879
+
+Adicional: Continuando de (3) : calcule el coeficiente de variación de el numero de personajes que han indicado tener mas de 30 años y que se llamaron en 15 min.
+
+Se desea:
+
+$$
+CV(X)=\frac{S(X)}{E(X)}
+$$
+
+En Poisson:
+
+$$
+E(X)=\lambda=L=10
+$$
+
+$$
+V(X)=\lambda=L=10
+$$
+
+Entonces:
+
+```{r}
+CVX<-sqrt(10)/10
+CVX
+```
+
+CV(X)=0.31.62278=31.62278%
+
+4\) De las dos variables numéricas:
+
+A. Determine la variable que mas se aproxima a una normal y calcule sus parámetros.
+
+B. Halle el cuartil 1 de dicha variable, utilizando la distribución normal aproximada.
+
+Solución A:
+
+```{r}
+hist(DF$Edad,breaks=10,probability = TRUE)
+lines(density(DF$Edad,na.rm = TRUE), lwd = 2, col = 'red')
+
+```
+
+```{r}
+summary(DF$Edad)
+```
+
+```{r}
+hist(DF$Estatura,breaks=10,probability = TRUE)
+lines(density(DF$Estatura,na.rm = TRUE), lwd = 2, col = 'red')
+
+```
+
+```{r}
+summary(DF$Estatura)
+```
+
+Se observa que en la variable Estatura, su Moda es aprox 175, su mediana es 175, su media es 174.9 ==\> tiende a ser simétrica y tiene forma acampanada.
+
+Conclusion : la variable normal es la Estatura y su media es 174.9
+
+Su desviación:
+
+```{r}
+sd(DF$Estatura)
+```
+
+$$
+X \rightarrow N(\mu=174.9, \sigma=9.340414) 
+$$
+
+B\) hallamos el Cuartil 1 de la Estatura, considerándola Normal:
+
+min estatura//////////25%///////////Q1---------------75%------------------max estatura
+
+Q1=???
+
+P(X\<=Q1)=0.25
+
+```{r}
+qnorm(0.25, 174.9, 9.340414)
+```
+
+El cuartil 1 de las estaturas es 168.6 cm.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+**PROBLEMA 5:**
+
+Una variable X tiene distribución normal. Se conoce que
+
+P(X\>8)= 0.40
+
+P(X\<10)= 0.80
+
+Calcular P(X\>9)
+
+**Solución:**
+
+$$
+X\rightarrow N(\mu=?, \sigma=?)
+$$
+
+Una normal necesita dos valores: mu y sigma
+
+Recordar que, si no se tiene uno de ellos o los dos, **se debe de ESTANDARIZAR:**
+
+$$
+Z=\frac{X-\mu}{\sigma}
+$$
+
+La variable Z tiene: su media= 0 y su desviación =1.
+
+Estos valores se colocan en R, al calcular la probabilidad.
+
+Dato 1:
+
+$$
+P(X>8)=0.40\rightarrow P(X-\mu>8-\mu)=P(\frac{x-\mu}{\sigma}>\frac{8-\mu}{\sigma})=P(Z>\frac{8-\mu}{\sigma})=0.40
+$$
+
+```{r}
+qnorm(0.4, 0,1, lower.tail=F)
+```
+
+$$
+\frac{8-\mu}{\sigma}=0.2533471
+$$
+
+$$
+P(X<10)=0.8\rightarrow P(X-\mu<10-\mu)=P(\frac{x-\mu}{\sigma}<\frac{10-\mu}{\sigma})=P(Z<\frac{10-\mu}{\sigma})=0.8
+$$
+
+```{r}
+qnorm(0.8, 0, 1)
+```
+
+$$
+\frac{10-\mu}{\sigma}=0.8416212
+$$
+
+Ahora a resolver el sistema:
+
+8 - U=0.2533471\*S (U: mu, S:sigma)
+
+10- U=0.8416212\*S
+
+Resolvemos el sistema de ecuaciones, restando la segunda menos la primera ecuación:
+
+2= 0.5882741\*S ==\> S=3.58247.
+
+Reemplazando en la segunda: 10-U=0.8416212\*(3.58247) ==\> U=6.985
+
+Se desea: P(X\>9)
+
+```{r}
+pnorm(9,6.985, 3.58247, lower.tail=F)
+```
+
+P(X\>9)= 0.286901.

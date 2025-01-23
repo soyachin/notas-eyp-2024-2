@@ -1,0 +1,191 @@
+# Distribuciones Discretas
+
+Recordar que para las distribuciones discretas $\geq$ y $>$ son iguales; lo mismo para $\leq$ y $<$.
+
+## Binomial - Bernoulli
+
+Se necesita:
+
+-   $x_o$ : El número que buscamos.
+
+-   Muestra/veces que se repite el experimento (size).
+
+-   Probabilidad de éxito en que se dé $x_o$ (prob).
+
+-   lower.tail: logical; if TRUE (default), probabilities are P\[X≤x\], otherwise, P\[X\>x\].
+
+**𝑃(é𝑥𝑖𝑡𝑜)=𝑝,**
+
+**𝑃(𝑓𝑟𝑎𝑐𝑎𝑠𝑜)=𝑞=1-p**
+
+*Esperado:* 𝑬(𝑿)=𝒏𝒑
+
+*Varianza:* 𝑽(𝑿)=𝒏.𝒑.𝒒
+
+### Encontrar la probabilidad acumulada
+
+```{r}
+# Buscas P(X<X_o) o P(X>X_o)
+# pbinom(xo, size, prob)
+```
+
+### Encontrar la probabilidad puntual
+
+```{r}
+# Buscas P(X=x_o)
+# dbinom(xo, size, prob)
+```
+
+### Ejemplo 1:
+
+Suponga que un lote de 5000 fusibles eléctricos contiene 5% de piezas defectuosas. Si se prueba una muestra de 5 fusibles, encuentre la probabilidad de hallar al menos uno defectuoso.
+
+```{r}
+# éxito de piezas defectuosas = 0.05
+# Se desea buscar P(X>1) (al menos 1) 
+pbinom(1,5,0.05, lower.tail = FALSE)
+```
+
+### Ejemplo 2:
+
+La experiencia ha demostrado que 30% de todas las personas afectadas por cierta enfermedad se recuperan. Una empresa fabricante de medicamentos ha inventado una nueva medicina. Diez personas con la enfermedad se seleccionaron al azar y recibieron la medicina; nueve se recuperaron al poco tiempo. Suponga que la medicina no es eficaz en lo absoluto.¿Cuál es la probabilidad de que se recuperen al menos nueve de los diez que recibieron la medicina?
+
+Resolución 1:
+
+```{r}
+# Probabilidad acumulada de que X sea menor o igual a 8
+p_acumulada_hasta_8 <- pbinom(8, size = 10, prob = 0.3, lower.tail = TRUE)
+
+# Probabilidad de que X sea mayor o igual a 9
+p_mayor_igual_9 <- 1 - p_acumulada_hasta_8
+
+# Imprimir la probabilidad
+print(p_mayor_igual_9)
+
+
+```
+
+Resolución 2:
+
+```{r}
+# Probabilidad de que 9 personas se recuperen
+p_9 <- dbinom(9, size = 10, prob = 0.3)
+
+# Probabilidad de que 10 personas se recuperen
+p_10 <- dbinom(10, size = 10, prob = 0.3)
+
+# Sumar las probabilidades
+p_al_menos_9 <- p_9 + p_10
+
+# Imprimir la probabilidad
+print(p_al_menos_9)
+
+```
+
+## Geométrica
+
+La variable aleatoria XX que cuenta el número de veces que hay que repetir el experimento hasta obtener el primer éxito se denomina **geométrica con parámetro** $p$.
+
+𝑃(é𝑥𝑖𝑡𝑜)=**𝑝**, 𝑃(𝑓𝑟𝑎𝑐𝑎𝑠𝑜)=**𝑞**, p+q=1
+
+*Esperado:* 𝑬(𝑿)=𝟏/𝒑
+
+*Varianza:* 𝑽(𝑿)=𝒒/(𝒑\^𝟐)
+
+$$
+P(X=xo)=p*q^{x-1}
+$$
+
+**Observación: 𝑅 utiliza una forma equivalente de variable geométrica.**
+
+***Entre ambas variables se cumple que: X = Y + 1***
+
+*Variable aleatoria de R*: *𝒀= **\# de fracasos** hasta obtener el éxito por primera vez.*
+
+Probabilidad: 𝒑(𝒀=𝒚)=𝒑.𝒒\^𝒚
+
+Esperado: 𝑬(𝒀)=𝒒/𝒑
+
+Varianza: 𝑽(𝒀)=𝒒/(𝒑\^𝟐)
+
+### Encontrar la probabilidad acumulada
+
+```{r}
+#P(𝒀=yo)=?? ==> 𝒅𝒈𝒆𝒐𝒎(yo,𝒑)
+# pgeom(Y, probabilidad)
+```
+
+### Encontrar la probabilidad puntual
+
+```{r}
+#𝑷(𝒀≤yo)=?? ==>𝒑𝒈𝒆𝒐𝒎(yo,𝒑)
+# dgeom(Y, probabilidad)
+```
+
+### Ejemplo 1:
+
+Suponga que la probabilidad de mal funcionamiento de un motor durante cualquier periodo de una hora es p=.02. Encuentre la probabilidad de que un motor determinado funcione bien por exactamente dos horas.
+
+```{r}
+dgeom(2,prob = 0.02)
+```
+
+## Binomial Negativa o Pascal
+
+Supongamos que repetimos un experimento Bernoulli parámetro p y con independencia hasta que encontremos el r-ésimo uno. La variable aleatoria Y que cuenta el número de veces que se tuvo que repetir el experimento Bernoulli se llama Binomial negativo con parámetros r,p
+
+> 𝑿=# de experimentos *hasta tener K éxitos.*
+
+DATOS: 𝑃(é𝑥𝑖𝑡𝑜)=𝑝, 𝑃(𝑓𝑟𝑎𝑐𝑎𝑠𝑜)=𝑞 ==\> p+q=1
+
+Esperado: 𝑬(𝑿)=𝒌/𝒑
+
+Varianza: 𝑽(𝑿)=𝒌.𝒒/𝒑\^𝟐
+
+Varianza: 𝑽(𝒀)=𝒌.𝒒/𝒑\^𝟐
+
+Entre ambas variables se cumple que: **X = Y + k**
+
+Con R:
+
+probabilidad: 𝑷(𝒀= yo )=?? 𝒅𝒏𝒃𝒊𝒏𝒐𝒎(yo,𝒌,𝒑)
+
+probabilidad acumulada: 𝑷(𝒀≤ yo)=?? 𝒑𝒏𝒃𝒊𝒏𝒐𝒎(yo,𝒌,𝒑)
+
+> Para trabajar con Rstudio debemos hallar $Y = X - K$
+
+## Hipergeométrica
+
+Proviene de un experimento aleatorio donde se extrae ***una muestra de K elementos sin reposición*****,** de una *población de **N** elementos*, que contiene solo dos tipos de elementos llamados Exito y Fracaso,siendo ***m** la cantidad de ÉXITOS* y ***n** la cantidad de fracasos* (N= m + n)
+
+**DATOS:**
+
+1\) N: Población
+
+2\) m: \# de éxitos en la población
+
+3\) n: \# de fracasos en la población
+
+4\) k: Tamaño de la muestra .
+
+Notar que : **m+ n = N**
+
+*Esperado:*
+
+$$
+E(X)=K.\frac{m}{N}
+$$
+
+*Varianza:*
+
+$$
+V(X)=K.\frac{m}{N}.(1-\frac{m}{N})(\frac{N-k}{N-1})
+$$
+
+Con R:
+
+probabilidad 𝑷(**X=xo**)=?? ==\>𝒅𝒉𝒚𝒑𝒆𝒓(xo,m,n,k) Siendo: m la cantidad total de éxitos, n la cantidad de fracasos y k la muestra seleccionada.
+
+probabilidad acumulada 𝑷(**X≤xo**)=?? ==\> 𝒑𝒉𝒚𝒑𝒆𝒓(xo,m,n,k)
+
+## Poisson
