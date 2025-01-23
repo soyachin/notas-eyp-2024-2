@@ -1,7 +1,0 @@
-"0","# Instala y carga el paquete VennDiagram si no lo tienes"
-"0","# install.packages(""VennDiagram"")"
-"0","library(VennDiagram)"
-"0","library(dplyr)"
-"0","if (!require(""grid"")) { install.packages(""grid"", dependencies = TRUE) library(grid)"
-"2","Error: unexpected symbol in ""if (!require(""grid"")) { install.packages(""grid"", dependencies = TRUE) library""
-"

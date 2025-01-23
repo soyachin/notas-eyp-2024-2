@@ -1,8 +1,0 @@
-"0","# Histograma con densidad empírica"
-"0","hist(DF1$Promedio, "
-"0","     breaks = 30, "
-"0","     probability = TRUE, "
-"0","     main = ""Gráfico del Promedio"", "
-"0","     col = ""lightblue"")"
-"2","Error: object 'DF1' not found
-"

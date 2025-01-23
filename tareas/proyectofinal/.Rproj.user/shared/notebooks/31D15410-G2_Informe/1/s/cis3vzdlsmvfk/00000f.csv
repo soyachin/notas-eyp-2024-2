@@ -1,1 +1,0 @@
-"0","pairs(~Consumo_antes_univ+Tazas_por_dia, data = DF_si2, col=""pink"", main = paste0(""Gráfico 3."", i))"

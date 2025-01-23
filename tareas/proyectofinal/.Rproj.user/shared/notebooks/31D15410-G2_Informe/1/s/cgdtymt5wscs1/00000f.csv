@@ -1,4 +1,0 @@
-"0","    # Promedio ponderado de los estudiantes, en un rango de 0 a 20"
-"0","    Promedio <- DF$Promedio"
-"2","Error: object 'DF' not found
-"

@@ -1,5 +1,0 @@
-"0","hist(DF$Promedio, "
-"0","     breaks = 30, "
-"0","     probability = TRUE, "
-"0","     main = ""Gráfico del Promedio"", "
-"0","     col = ""lightblue"")"

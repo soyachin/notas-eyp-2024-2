@@ -1,7 +1,0 @@
-"0","mu <- media"
-"0","sigma <- sd(DF$Promedio, na.rm = TRUE)"
-"0","print(paste(""Sigma:"", r(sigma)))"
-"1","[1]"
-"1"," ""Sigma: 2.34"""
-"1","
-"

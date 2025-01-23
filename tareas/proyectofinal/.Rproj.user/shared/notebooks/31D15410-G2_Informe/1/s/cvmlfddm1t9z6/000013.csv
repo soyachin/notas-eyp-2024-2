@@ -1,3 +1,0 @@
-"0",""
-"0","# Superponer la curva de densidad teórica (distribución exponencial)"
-"0","curve(dexp(x, rate = lambda), col = ""blue"", lwd = 2, add = TRUE)"

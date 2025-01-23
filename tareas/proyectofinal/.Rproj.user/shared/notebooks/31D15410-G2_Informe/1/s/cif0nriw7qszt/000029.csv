@@ -1,1 +1,0 @@
-"0","abline(v = mean(DF$Gasto_semanal_cafe, na.rm = TRUE), col = ""red"", lwd = 1, lty = 2)"

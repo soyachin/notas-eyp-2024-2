@@ -1,3 +1,0 @@
-"0","ea <- DF_frecuencia_reunion"
-"0","ea$Probabilidad <- r(ea$Probabilidad*100)"
-"0","ea"

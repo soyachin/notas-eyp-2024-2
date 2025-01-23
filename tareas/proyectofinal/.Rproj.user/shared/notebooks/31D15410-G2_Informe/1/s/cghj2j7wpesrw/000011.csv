@@ -1,3 +1,0 @@
-"0",""
-"0","# Línea de densidad empírica"
-"0","lines(density(DF$Promedio, na.rm = TRUE), lwd = 3, col = ""red"")"
